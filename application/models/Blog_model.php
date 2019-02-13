@@ -3,9 +3,11 @@
 class Blog_model extends CI_Model{
 
 	public function getBlogs(){
-		return $this->db->query("SELECT * FROM blog");
+		$filter = $this->input->get('find');
+		$this->db->like('title',$filter);
+		return $this->db->get("blog");
 	}
-	
+
 	public function getSingleBlog($field,$value){
 		$this->db->where($field,$value);
 		return $this->db->get('blog');

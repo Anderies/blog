@@ -13,6 +13,7 @@ class Blog extends CI_Controller{
 	public function index(){
 		$query = $this->Blog_model->getBlogs();
 		$data['blogs'] = $query->result_array();
+		
 		$this->load->view('blog' , $data );
 	}
 
