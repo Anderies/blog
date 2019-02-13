@@ -1,6 +1,16 @@
 <?php $this->load->view('partial/header');?>
 <!-- Page Header -->
-  <header class="masthead" style="background-image: url('<?php echo base_url();?>assets/img/post-bg.jpg')">
+
+<!-- url foto di local -->
+<?php
+    if (empty($blog['cover'])) {
+      $cover = base_url() . 'assets/img/post-bg.jpg';
+    }else{
+      $cover = base_url() . 'uploads/' . $blog['cover'];
+}
+?>
+  <header class="masthead" 
+  style="background-image: url('<?php echo $cover; ?>')">
     <div class="overlay"></div>
     <div class="container">
       <div class="row">

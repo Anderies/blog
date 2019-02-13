@@ -5,8 +5,7 @@ class Blog extends CI_Controller{
 	//daftarin 1 fungsi untuk semua method dan fungsi akan di load di awalan setiap method
 	public function __construct(){
 		parent::__construct();
-		$this->load->database();
-		$this->load->helper('url');
+		
 		$this->load->model('Blog_model');
 	}
 
@@ -30,6 +29,23 @@ class Blog extends CI_Controller{
 			$data['content'] = $this->input->post('content');
 			$data['url'] = $this->input->post('url');
 		
+		 	$config['upload_path']          = './uploads/';
+            $config['allowed_types']        = 'gif|jpg|png||jpeg';
+            $config['max_size']             = 400000;
+            $config['max_width']            = 4024;
+            $config['max_height']           = 3768;
+
+            $this->load->library('upload', $config);
+
+            if ( !$this->upload->do_upload('cover'))
+                {
+                        echo $this->upload->display_errors();
+                }
+                else
+                {
+                		$data['cover'] = $this->upload->data()['file_name'];
+
+                }
 			$id = $this->Blog_model->insertBlog($data);
 
 			if ($id) {
@@ -56,6 +72,7 @@ class Blog extends CI_Controller{
 
 			if ($id) {
 				echo "Data Berhasil disimpan";
+				redirect('/');
 			}else
 				echo "Data Gagal Disimpan";
 		}

@@ -19,21 +19,31 @@
   		<div class="col-lg-8">
 
 	<h1>Tambah Artikel</h1>
-	<form method="POST">
+	<?php echo form_open_multipart();?>
 		<div class="form-group">
 			<label>Judul</label>
-			<input class="form-control" type="text" name="title">
+			<!-- paramater 1 name , parameter 2 value, parameter 3 atribut apapun -->
+			<?php echo form_input('title',null,'class="form-control"');?>
 		</div>
+
 		<div class="form-group">
 			<label>URL</label>
-			<input class="form-control" type="text" name="url">
+			<?php echo form_input('url',null,'class="form-control"');?>
 		</div>
+
 		<div class="form-group">
-		<label>Konten</label>
-		<textarea class="form-control" name="content" id="" cols="30" rows="10"></textarea>
+			<label>Konten</label>
+			<?php echo form_textarea('content',null,'class="form-control"');?>
 		</div>
-			<button class="btn btn-primary"type="submit">Simpan Artikel</button>
-	</form>
+
+		<div class="form-group">
+			<label>Cover</label>
+			<?php echo form_upload('cover',null,'class="form-control"');?>
+		</div>
+
+	<button class="btn btn-primary"type="submit">Simpan Artikel</button>
+	<?php echo form_close(); ?>
+	
 	</div>
   </div>
  </div>
