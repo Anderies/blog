@@ -24,7 +24,14 @@ class Blog extends CI_Controller{
 
 	public function add()
 	{
-		if ($this->input->post()) {
+		// Validasi Form menunjukkan bahwa title , url dan content harus di isi
+		//URL mengikuti aturan alpha_dash
+		$this->form_validation->set_rules('title','Judul','required');
+		$this->form_validation->set_rules('url','URL','required|alpha_dash');
+		$this->form_validation->set_rules('content','Konten','required');
+
+		//Apabila Form Validasi bersifat TRUE maka simpan
+		if ($this->form_validation->run() === TRUE) {
 			$data['title'] = $this->input->post('title');
 			$data['content'] = $this->input->post('content');
 			$data['url'] = $this->input->post('url');
@@ -61,13 +68,32 @@ class Blog extends CI_Controller{
 	public function edit($id){
 		$query = $this->Blog_model->getSingleBlog('id',$id);
 		$data['blog'] = $query->row_array();
+
+		// Validasi Form menunjukkan bahwa title , url dan content harus di isi
+		//URL mengikuti aturan alpha_dash
+		$this->form_validation->set_rules('title','Judul','required');
+		$this->form_validation->set_rules('url','URL','required|alpha_dash');
+		$this->form_validation->set_rules('content','Konten','required');
 		
 
-		if ($this->input->post()) {
+		if ($this->form_validation->run() === TRUE) {
 			$post['title'] = $this->input->post('title');
 			$post['content'] = $this->input->post('content');
 			$post['url'] = $this->input->post('url');
 		
+			$config['upload_path']          = './uploads/';
+            $config['allowed_types']        = 'gif|jpg|png||jpeg';
+            $config['max_size']             = 400000;
+            $config['max_width']            = 4024;
+            $config['max_height']           = 3768;
+
+            $this->load->library('upload', $config);
+            $this->upload->do_upload('cover');
+
+            if (!empty($this->upload->data()['file_name'])){
+                 $post['cover'] = $this->upload->data()['file_name'];
+            }
+                
 			$id = $this->Blog_model->updateBlog($id, $post);
 
 			if ($id) {
