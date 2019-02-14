@@ -7,6 +7,7 @@ class Blog extends CI_Controller{
 		parent::__construct();
 		
 		$this->load->model('Blog_model');
+		$this->load->library('session');
 	}
 
 	public function index($offset = 0){
@@ -62,10 +63,11 @@ class Blog extends CI_Controller{
 			$id = $this->Blog_model->insertBlog($data);
 
 			if ($id) {
-				echo "Data Berhasil disimpan";
+				$this->session->set_flashdata("message", '<div class="alert alert-success">Data Berhasil Disimpan</div>');
 				redirect('/');
 			}else
-				echo "Data Gagal Disimpan";
+				$this->session->set_flashdata("message",'<div class="alert alert-warning">Data Gagal Disimpan</div>');
+				redirect('/');
 		}		
 		
 		$this->load->view('form_add');
@@ -103,16 +105,50 @@ class Blog extends CI_Controller{
 			$id = $this->Blog_model->updateBlog($id, $post);
 
 			if ($id) {
-				echo "Data Berhasil disimpan";
+				$this->session->set_flashdata("message", '<div class="alert alert-success">Data Berhasil Disimpan</div>');
 				redirect('/');
-			}else
-				echo "Data Gagal Disimpan";
+			}else{
+				$this->session->set_flashdata("message",'<div class="alert alert-warning">Data Gagal Disimpan</div>');
+				redirect('/');
+			}
 		}
 		$this->load->view('form_edit',$data);		
 	}
 
 	public function delete($id){
-		$this->Blog_model->deleteBlog($id);
+
+		$result = $this->Blog_model->deleteBlog($id);
+		if($result){
+			$this->session->set_flashdata("message", '<div class="alert alert-success">Data Berhasil Dihapus</div>');
+				redirect('/');
+		}else{
+			$this->session->set_flashdata("message", '<div class="alert alert-success">Data Gagal
+			 Dihapus</div>');
+				redirect('/');
+		}
+
+	}
+
+	public function login(){
+
+		if ($this->input->post()) {
+			$username = $this->input->post('username');
+			$password = $this->input->post('password');
+
+		if ($username == 'admin' && $password == 'admin') {
+			$_SESSION['username'] = 'admin';
+			redirect('/');
+		}else{
+			$this->session->set_flashdata('message','<div class="alert alert-warning">Username/Password tidak valid</div>');
+			redirect('blog/login');
+		}
+	}
+
+		$this->load->view('login');
+}
+
+	public function logout(){
+		$this->session->sess_destroy();
 		redirect('/');
 
 	}
