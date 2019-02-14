@@ -9,8 +9,14 @@ class Blog extends CI_Controller{
 		$this->load->model('Blog_model');
 	}
 
-	public function index(){
-		$query = $this->Blog_model->getBlogs();
+	public function index($offset = 0){
+		$this->load->library('pagination');
+		$config['base_url'] = site_url('blog/index');
+		$config['total_rows'] = $this->Blog_model->getTotalBlogs(); //untuk mengambil total dari blogs
+		$config['per_page'] = 3;
+		$this->pagination->initialize($config);
+
+		$query = $this->Blog_model->getBlogs($config['per_page'] , $offset);
 		$data['blogs'] = $query->result_array();
 		
 		$this->load->view('blog' , $data );
